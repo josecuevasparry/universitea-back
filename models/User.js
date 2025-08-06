@@ -12,6 +12,17 @@ class User {
     return rows[0];
   }
 
+  // Add this method for authentication
+  static async getByEmail(email) {
+    const [rows] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
+    return rows[0];
+  }
+
+  // Add this method for password comparison
+  static async comparePassword(password, hashedPassword) {
+    return await bcrypt.compare(password, hashedPassword);
+  }
+
   static async create({ name, email, password, mobile, role = 'user', cuidador = 0, profesional = 0 }) {
     const hashedPassword = await bcrypt.hash(password, 10);
     const [result] = await db.query(
